@@ -23,6 +23,13 @@ LibStub.minor = LIBSTUB_MINOR
 local LibStub_mt = getmetatable(LibStub) or {}
 setmetatable(LibStub, LibStub_mt)
 
+-- LibStub:NewLibrary(major, minor)
+-- major (string) - the major version of the library
+-- minor (string or number ) - the minor version of the library
+-- 
+-- returns nil if a newer or same version of the lib is already present
+-- returns empty library object or old library object if upgrade is needed
+
 function LibStub:NewLibrary(major, minor)
 	if type(minor) == "string" then
 		-- Convert revision strings into numbers
@@ -47,6 +54,12 @@ function LibStub:NewLibrary(major, minor)
 	return entry.instance
 end
 
+-- LibStub:GetInstance(major)
+-- major (string) - the major version of the library
+--
+-- throws an error if the library can not be found
+-- returns the library object if found
+
 function LibStub:GetInstance(major)
 	if type(major) ~= "string" then
 		error(("Bad argument #2 to 'GetInstance' (string expected, got %s)"):format(type(major)), 2)
@@ -61,6 +74,11 @@ function LibStub:GetInstance(major)
 	return entry.instance
 end
 
+-- LibStub:HasInstance(major)
+-- major (string) - the major version of the library
+-- 
+-- returns true if an instance of the library is available
+
 function LibStub:HasInstance(major)
 	return major and self.libs[major]
 end
@@ -74,7 +92,7 @@ local function safecall(func,...)
 		geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("\n(.-: )in.-\n") or "") .. err) 
 		return
 	end
-	
+	-- return first return value from the function called by pcall if pcall was succesful
 	return err
 end
 
