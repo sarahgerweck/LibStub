@@ -100,7 +100,7 @@ function LibStub:FinalizeLibrary(major, callback )
 	if type(major) ~= "string" then
 		error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
 	end
-
+	
 	if type(callback) ~= "function" and type(callback) ~= "nil" then
 		error(("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
 	end
@@ -110,12 +110,10 @@ function LibStub:FinalizeLibrary(major, callback )
 	if not entry then
 		error(("Cannot finalize an unregistered instance of  %s."):format(major), 2)
 	end
-
-	-- TODO: upgrade old namespaces that have been embedded
-
+	
 	-- Store the function and the callback function in the registry
 	entry.callback = callback
-
+	
 	-- Iterate through all libraries, and call any callback functions
 	for key, lib in pairs(self.libs) do
 		-- Don't trigger the callback of the registering library
