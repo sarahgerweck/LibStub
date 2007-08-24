@@ -65,3 +65,42 @@ function LibStub:GetInstance(major)
 end
 
 LibStub_mt.__call = LibStub.GetInstance
+
+function LibStub:FinalizeLibrary(major, exports, callback )
+	if type(major) ~= "string" then
+		error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
+	end
+
+	if type(exports) == "function" then
+		callback = exports
+		exports = nil
+	end
+
+	if type(exports) ~= "table" and type(exports) ~= "nil" then
+		error(("Bad argument #3 to 'FinalizeLibrary' (function, table or nil expected, got %s)"):format(type(exports)), 2)
+	end
+
+	if type(callback) ~= "function" and type(callback) ~= "nil" then
+		error(("Bad argument #4 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
+	end
+	
+	local entry = self.libs[major]
+	
+	if not entry then
+		error(("Cannot find a library instance of %s."):format(major), 2)
+	end
+
+	-- TODO: upgrade old namespaces that have been embedded
+
+	-- store current exports and callback
+	entry.exports = exports
+	entry.callback = callback
+
+	-- shout out to all callbacks
+	for k, lib in pairs( self.libs ) do
+		if lib ~= entry and type(lib.callback) == "function" and lib.callback(major, entry.instance) then
+			-- some true value was received from the callback, unregister it
+			lib.callback = nil
+		end
+	end
+end
