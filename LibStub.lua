@@ -19,6 +19,7 @@ if not LibStub then
 	_G[LIBSTUB_MAJOR] = LibStub
 else
 	-- Upgrading
+	LibStub._minor = LIBSTUB_MINOR
 end
 
 -- make sure we dont overwrite anything if we updated LibStub
