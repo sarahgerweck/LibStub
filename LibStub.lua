@@ -35,7 +35,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		return entry.instance
 	end
 
-	-- LibStub:GetInstance(major, optional)
+	-- LibStub:GetInstance(major, silent)
 	-- major (string) - the major version of the library
 	-- silent (boolean) - if true, library is optional, silently return nil if its not found
 	--
