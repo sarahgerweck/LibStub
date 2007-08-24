@@ -61,6 +61,10 @@ function LibStub:GetInstance(major)
 	return entry.instance
 end
 
+function LibStub:HasInstance(major)
+	return major and self.libs[major]
+end
+
 -- Set up the metatable to allow LibStub("MajorVersion")
 LibStub_mt.__call = LibStub.GetInstance
 
@@ -117,3 +121,26 @@ function LibStub:FinalizeLibrary(major, exports, callback )
 		end
 	end
 end
+
+function LibStub:Embed(namespace, ...)
+	if type(namespace) ~= "table" then
+		error(("Bad argument #2 to 'Embed' (table expected, got %s)"):format(type(namespace)), 2)
+	end
+
+	for i=1,select("#", ...) do
+		local libname = select(i, ...)
+		local lib = LibStub:GetInstance(libname)
+
+		if type(lib.exports) == "table" then
+			for idx,method in ipairs(lib.exports) do
+				-- What do we do here when there are collisions?
+				-- I.e. How do we handle collisions versus upgrades?
+
+				namespace[method] = lib[method]
+			end
+		elseif type(lib.exports) == "function" then
+			safecall(lib.exports, namespace)
+		end
+	end
+end
+
