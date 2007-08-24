@@ -4,16 +4,21 @@ local LIBSTUB_MINOR = "$Revision$"
 
 local _G = getfenv()
 local LibStub = _G[LIBSTUB_MAJOR]
-if LibStub and LibStub._minor < LIBSTUB_MINOR then
-	-- Upgrading
-elseif not LibStub then
+
+-- same or older version, just leave
+if LibStub and LibStub._minor >= LIBSTUB_MINOR then return end
+
+-- check for upgrading
+if not LibStub then
 	-- First load
 	LibStub = {
 		libs = {},
-		_minor = tonumber(LIBSTUB_MINOR:match("%d+")),
+		_minor = LIBSTUB_MINOR,
 	}
 	
 	_G[LIBSTUB_MAJOR] = LibStub
+else
+	-- Upgrading
 end
 
 function LibStub:NewLibrary(major, minor)
