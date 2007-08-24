@@ -30,3 +30,17 @@ function LibStub:NewLibrary(major, minor)
    
    return slot.instance
 end
+
+function LibStub:GetInstance(major)
+   if type(major) ~= "string" then
+      error(("Bad argument #2 to 'GetInstance' (string expected, got %s)"):format(type(major)), 2)
+   end
+   
+   local slot = self.libs[major]
+   
+   if not slot then
+      error(("Cannot find a library instance of %s."):format(major), 2)
+   end
+   
+   return slot.instance
+end
