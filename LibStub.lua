@@ -54,13 +54,14 @@ function LibStub:NewLibrary(major, minor)
 	return entry.instance
 end
 
--- LibStub:GetInstance(major)
+-- LibStub:GetInstance(major, optional)
 -- major (string) - the major version of the library
+-- silent (boolean) - if true, library is optional, silently return nil if its not found
 --
 -- throws an error if the library can not be found
 -- returns the library object if found
 
-function LibStub:GetInstance(major)
+function LibStub:GetInstance(major, silent)
 	if type(major) ~= "string" then
 		error(("Bad argument #2 to 'GetInstance' (string expected, got %s)"):format(type(major)), 2)
 	end
@@ -68,19 +69,11 @@ function LibStub:GetInstance(major)
 	local entry = self.libs[major]
 	
 	if not entry then
-		error(("Cannot find a library instance of %s."):format(major), 2)
+		if silent then return nil
+		else error(("Cannot find a library instance of %s."):format(major), 2) end
 	end
 	
 	return entry.instance
-end
-
--- LibStub:HasInstance(major)
--- major (string) - the major version of the library
--- 
--- returns true if an instance of the library is available
-
-function LibStub:HasInstance(major)
-	return major and self.libs[major]
 end
 
 -- Set up the metatable to allow LibStub("MajorVersion")
@@ -96,27 +89,20 @@ local function safecall(func,...)
 	return err
 end
 
--- LibStub:FinalizeLibrary(major, exports, callback)
+-- LibStub:FinalizeLibrary(major, callback)
 --
 -- major (string) - The major version of the library 
--- exports (table or function) - A table of functions to be exported into
---   a namespace when LibStub:Embed(namespace, "Major Version") is called.
---   If a function is supplied, then that will be called on LibStub:Embed()
 -- callback (function)  - A function to be called when a new library is loaded.
 --   If this function returns a true value, then after being called, it will
 --   be removed from the callback registry.
 --
-function LibStub:FinalizeLibrary(major, exports, callback )
+function LibStub:FinalizeLibrary(major, callback )
 	if type(major) ~= "string" then
 		error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
 	end
 
-	if type(exports) ~= "table" and type(exports) ~= "function" and type(exports) ~= "nil" then
-		error(("Bad argument #3 to 'FinalizeLibrary' (function, table, nil expected, got %s)"):format(type(exports)), 2)
-	end
-
 	if type(callback) ~= "function" and type(callback) ~= "nil" then
-		error(("Bad argument #4 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
+		error(("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
 	end
 	
 	local entry = self.libs[major]
@@ -127,8 +113,7 @@ function LibStub:FinalizeLibrary(major, exports, callback )
 
 	-- TODO: upgrade old namespaces that have been embedded
 
-	-- Store the exports table/function and the callback function in the registry
-	entry.exports = exports
+	-- Store the function and the callback function in the registry
 	entry.callback = callback
 
 	-- Iterate through all libraries, and call any callback functions
@@ -144,26 +129,3 @@ function LibStub:FinalizeLibrary(major, exports, callback )
 		end
 	end
 end
-
-function LibStub:Embed(namespace, ...)
-	if type(namespace) ~= "table" then
-		error(("Bad argument #2 to 'Embed' (table expected, got %s)"):format(type(namespace)), 2)
-	end
-
-	for i=1,select("#", ...) do
-		local libname = select(i, ...)
-		local lib = LibStub:GetInstance(libname)
-
-		if type(lib.exports) == "table" then
-			for idx,method in ipairs(lib.exports) do
-				-- What do we do here when there are collisions?
-				-- I.e. How do we handle collisions versus upgrades?
-
-				namespace[method] = lib[method]
-			end
-		elseif type(lib.exports) == "function" then
-			safecall(lib.exports, namespace)
-		end
-	end
-end
-
