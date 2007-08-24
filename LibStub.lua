@@ -5,12 +5,11 @@ local LibStub = _G[LIBSTUB_MAJOR]
 
 -- Check to see is this version of the library is obsolete
 if not LibStub or LibStub.minor < LIBSTUB_MINOR then 
-	-- If this is the first LibStub being instantiated, create it
-	if not LibStub then LibStub = { libs = {},} end
-
-	LibStub.minor = LIBSTUB_MINOR
-	local LibStub_mt = getmetatable(LibStub) or {}
-	setmetatable(LibStub, LibStub_mt)
+	if not LibStub then 
+		LibStub = { libs = {},}
+		setmetatable(LibStub, {})
+		_G[LIBSTUB_MAJOR] = LibStub
+	 end
 
 	-- LibStub:NewLibrary(major, minor)
 	-- major (string) - the major version of the library
@@ -22,7 +21,6 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		if type(minor) == "string" then
 			minor = tonumber(minor:match("%d+"))
 		end
-
 		if type(minor) ~= "number" then
 			error("Minor version must contain a number.", 2)
 		end
@@ -51,35 +49,30 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		local entry = self.libs[major]
 	
 		if not entry then
-			if silent then return nil
-			else error(("Cannot find a library instance of %s."):format(major), 2) end
+			if silent then return nil end
+			error(("Cannot find a library instance of %s."):format(major), 2)
 		end
 	
 		return entry.instance
 	end
 
-	LibStub_mt.__call = LibStub.GetInstance
-
 	local function safecall(func,...)
 		local success, err = pcall(func,...)
-		if not success then 
-			geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("\n(.-: )in.-\n") or "") .. err) 
-			return
-		end
-		return err
+		if success then return err end
+		
+		if not err:find("%.lua:%d+:") then err = (debugstack():match("\n(.-: )in.-\n") or "") .. err end 
+		geterrorhandler()(err)
 	end
 
 	-- LibStub:FinalizeLibrary(major, callback)
 	--
 	-- major (string) - The major version of the library 
 	-- callback (function)  - A function to be called when a new library is loaded.
-	--   If this function returns a true value, then after being called, it will
-	--   be removed from the callback registry.
+	--   If this function returns a true value, then after being called, it will be removed from the callback registry.
 	function LibStub:FinalizeLibrary(major, callback )
 		if type(major) ~= "string" then
 			error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
 		end
-	
 		if type(callback) ~= "function" and type(callback) ~= "nil" then
 			error(("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
 		end
@@ -92,9 +85,11 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	
 		for key, lib in pairs(self.libs) do
 			if lib ~= entry and type(lib.callback) == "function" then
-				local unregister = safecall(lib.callback, major, entry.instance)
-				if unregister then lib.callback = nil end
+				if safecall(lib.callback, major, entry.instance) then lib.callback = nil end
 			end
 		end
 	end
+	
+	LibStub.minor = LIBSTUB_MINOR
+	getmetatable(LibStub).__call = LibStub.GetInstance
 end
