@@ -85,7 +85,7 @@ function LibStub:FinalizeLibrary(major, exports, callback )
 	end
 
 	if type(exports) ~= "table" and type(exports) ~= "function" and type(exports) ~= "nil" then
-		error(("Bad argument #3 to 'FinalizeLibrary' (string, table, nil expected, got %s)"):format(type(exports)), 2)
+		error(("Bad argument #3 to 'FinalizeLibrary' (function, table, nil expected, got %s)"):format(type(exports)), 2)
 	end
 
 	if type(callback) ~= "function" and type(callback) ~= "nil" then
@@ -111,7 +111,9 @@ function LibStub:FinalizeLibrary(major, exports, callback )
 			local unregister = safecall(lib.callback, major, entry.instance)
 			
 			-- If the callback returns a true value, unregister it
-			lib.callback = nil
+			if unregister then
+				lib.callback = nil
+			end
 		end
 	end
 end
