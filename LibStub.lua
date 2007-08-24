@@ -7,7 +7,7 @@ local LibStub = _G[LIBSTUB_MAJOR]
 
 -- Check to see is this version of the library is obsolete
 -- If so, return immediate without taking further action
-if LibStub and LibStub._minor >= LIBSTUB_MINOR then return end
+if LibStub and LibStub.minor >= LIBSTUB_MINOR then return end
 
 -- If this is the first LibStub being instantiated, create it
 if not LibStub then
