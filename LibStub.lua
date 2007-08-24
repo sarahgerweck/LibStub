@@ -35,15 +35,15 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		return entry.instance
 	end
 
-	-- LibStub:GetInstance(major, silent)
+	-- LibStub:GetLibrary(major, silent)
 	-- major (string) - the major version of the library
 	-- silent (boolean) - if true, library is optional, silently return nil if its not found
 	--
 	-- throws an error if the library can not be found
 	-- returns the library object if found
-	function LibStub:GetInstance(major, silent)
+	function LibStub:GetLibrary(major, silent)
 		if type(major) ~= "string" then
-			error(("Bad argument #2 to 'GetInstance' (string expected, got %s)"):format(type(major)), 2)
+			error(("Bad argument #2 to 'GetLibrary' (string expected, got %s)"):format(type(major)), 2)
 		end
 	
 		local entry = self.libs[major]
@@ -73,7 +73,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		if type(major) ~= "string" then
 			error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
 		end
-		if type(callback) ~= "function" and type(callback) ~= "nil" then
+		if callback and type(callback) ~= "function" then
 			error(("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
 		end
 	
@@ -91,5 +91,5 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	end
 	
 	LibStub.minor = LIBSTUB_MINOR
-	getmetatable(LibStub).__call = LibStub.GetInstance
+	getmetatable(LibStub).__call = LibStub.GetLibrary
 end
