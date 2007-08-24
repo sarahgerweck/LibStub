@@ -32,7 +32,7 @@ function LibStub:NewLibrary(major, minor)
 	end
 
 	if type(minor) ~= "number" then
-		error("Minor version must contain a number")
+		error("Minor version must contain a number.", 2)
 	end
 	
 	local entry = self.libs[major] or {}
