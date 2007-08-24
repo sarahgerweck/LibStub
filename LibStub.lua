@@ -1,6 +1,6 @@
 -- $Id$
 local LIBSTUB_MAJOR = "LibStub"
-local LIBSTUB_MINOR = "$Revision$"
+local LIBSTUB_MINOR = 1
 
 local _G = getfenv()
 local LibStub = _G[LIBSTUB_MAJOR]
@@ -20,6 +20,10 @@ if not LibStub then
 else
 	-- Upgrading
 end
+
+-- make sure we dont overwrite anything if we updated LibStub
+local LibStub_mt = getmetatable(LibStub) or {}
+setmetatable(LibStub, LibStub_mt)
 
 function LibStub:NewLibrary(major, minor)
 	if type(minor) == "string" then
@@ -58,3 +62,5 @@ function LibStub:GetInstance(major)
 	
 	return entry.instance
 end
+
+LibStub_mt.__call = LibStub.GetInstance
