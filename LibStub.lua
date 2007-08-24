@@ -1,4 +1,4 @@
---$ID$
+-- $Id$
 local LIBSTUB_MAJOR = "LibStub"
 local LIBSTUB_MINOR = "$Revision$"
 
@@ -19,7 +19,7 @@ function LibStub:NewLibrary(major, minor)
     
    local slot = self.libs[major] or {}
    
-   if slot.minor and slot.minor > minor then 
+   if slot.minor and slot.minor >= minor then 
       return nil 
    end
    
