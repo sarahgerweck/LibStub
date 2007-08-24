@@ -69,8 +69,13 @@ end
 LibStub_mt.__call = LibStub.GetInstance
 
 local function safecall(func,...)
-    local success, err = pcall(func,...)
-    if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("\n(.-: )in.-\n") or "") .. err) end
+	local success, err = pcall(func,...)
+	if not success then 
+		geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("\n(.-: )in.-\n") or "") .. err) 
+		return
+	end
+	
+	return err
 end
 
 -- LibStub:FinalizeLibrary(major, exports, callback)
