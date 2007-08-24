@@ -6,11 +6,13 @@ local _G = getfenv()
 local LibStub = _G[LIBSTUB_MAJOR]
 if LibStub and LibStub._minor < LIBSTUB_MINOR then
 	-- Upgrading
-else
+elseif not LibStub then
 	-- First load
 	LibStub = {
-		libs = {}
+		libs = {},
+		_minor = tonumber(LIBSTUB_MINOR:match("%d+")),
 	}
+	
 	_G[LIBSTUB_MAJOR] = LibStub
 end
 
