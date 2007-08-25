@@ -35,7 +35,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		return entry.instance
 	end
 
-	-- LibStub:GetLibrary(major, silent)
+	-- LibStub:GetLibrary(major, [silent])
 	-- major (string) - the major version of the library
 	-- silent (boolean) - if true, library is optional, silently return nil if its not found
 	--
@@ -64,12 +64,12 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		geterrorhandler()(err)
 	end
 
-	-- LibStub:FinalizeLibrary(major, callback)
+	-- LibStub:FinalizeLibrary(major, [callback])
 	--
 	-- major (string) - The major version of the library 
 	-- callback (function)  - A function to be called when a new library is loaded.
 	--   If this function returns a true value, then after being called, it will be removed from the callback registry.
-	function LibStub:FinalizeLibrary(major, callback )
+	function LibStub:FinalizeLibrary(major, callback)
 		if type(major) ~= "string" then
 			error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
 		end
