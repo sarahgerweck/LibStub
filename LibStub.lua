@@ -6,10 +6,11 @@ local LibStub = _G[LIBSTUB_MAJOR]
 -- Check to see is this version of the library is obsolete
 if not LibStub or LibStub.minor < LIBSTUB_MINOR then 
 	if not LibStub then 
-		LibStub = {libs = {}, minors = {}, } 
+		LibStub = {libs = {}, minors = {} } 
 		_G[LIBSTUB_MAJOR] = LibStub
 	end
-
+	LibStub.minor = LIBSTUB_MINOR
+	
 	-- LibStub:NewLibrary(major, minor)
 	-- major (string) - the major version of the library
 	-- minor (string or number ) - the minor version of the library
@@ -25,7 +26,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		self.minors[major], self.libs[major] = minor, self.libs[major] or {}
 		return self.libs[major]
 	end
-
+	
 	-- LibStub:GetLibrary(major, [silent])
 	-- major (string) - the major version of the library
 	-- silent (boolean) - if true, library is optional, silently return nil if its not found
@@ -34,10 +35,10 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
 		assert(type(major) == "string", "Bad argument #2 to 'GetLibrary' (string expected)")
-		if not silent and not self.libs[major] then error(('Library "%s" instance not found'):format(major), 2) end
+		if not silent and not self.libs[major] then error(("Cannot find a library instance of '%s'."):format(major), 2) end
 		return self.libs[major]
 	end
-
+	
 	-- LibStub:IterateLibraries()
 	-- 
 	-- Returns an iterator for the currently registered libraries
@@ -45,6 +46,5 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		return pairs(self.libs) 
 	end
 	
-	LibStub.minor = LIBSTUB_MINOR
 	setmetatable(LibStub, { __call = LibStub.GetLibrary })
 end
