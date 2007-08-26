@@ -16,7 +16,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns nil if a newer or same version of the lib is already present
 	-- returns empty library object or old library object if upgrade is needed
 	function LibStub:NewLibrary(major, minor)
-		assert(type(major) == "string", "Bad argument #2 to 'NewLibrary' (string expected)")
+		assert(type(major) == "string", "Bad argument #2 to `NewLibrary' (string expected)")
 		minor = assert(tonumber(strmatch(minor, "%d+")), "Minor version must either be a number or contain a number.")
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
