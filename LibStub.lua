@@ -56,7 +56,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	--
 	-- major (string) - The major version of the library 
 	-- callback (function)  - A function to be called when a new library is loaded.
-	--   If this function returns a true value, then after being called, it will be removed from the callback registry.
+	-- If this function returns a true value, then after being called, it will be removed from the callback registry.
 	function LibStub:FinalizeLibrary(major, callback)
 		assert(type(major) == "string", ("Bad argument #2 to 'GetLibrary' (string expected, got %s)"):format(type(major)))
         assert(not callback or type(callback) == "function", ("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)))
@@ -72,6 +72,11 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		end
 	end
 	
+    -- LibStub:IterateLibrary()
+    -- 
+    -- Returns an iterator for the currently registered libraries
+    function LibStub:IterateLibraries() return pairs(self.libs) end
+    
 	LibStub.minor = LIBSTUB_MINOR
 	getmetatable(LibStub).__call = LibStub.GetLibrary
 end
