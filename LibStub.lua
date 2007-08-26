@@ -34,7 +34,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
 		assert(type(major) == "string", "Bad argument #2 to 'GetLibrary' (string expected)")
-        if not silent and not self.libs[major] then error(('Library "%s" instance not found'):format(major), 2) end
+		if not silent and not self.libs[major] then error(('Library "%s" instance not found'):format(major), 2) end
 		return self.libs[major]
 	end
 
