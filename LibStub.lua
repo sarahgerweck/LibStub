@@ -23,7 +23,6 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
 		self.minors[major], self.libs[major] = minor, self.libs[major] or {}
-		
 		return self.libs[major]
 	end
 
@@ -35,7 +34,8 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
 		assert(type(major) == "string", "Bad argument #2 to 'GetLibrary' (string expected)")
-		return not silent and assert(self.libs[major], "Library instance not found.") or self.libs[major]
+        if not silent and not self.libs[major] then error(('Library "%s" instance not found'):format(major), 2) end
+		return self.libs[major]
 	end
 
 	-- LibStub:IterateLibraries()
