@@ -2,7 +2,6 @@
 
 ## Title: Lib: LibStub
 ## Notes: Universal Library Stub
-## Author: 
 ## Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel
 ## X-Website: http://jira.wowace.com/browse/LS
 ## X-Category: Library

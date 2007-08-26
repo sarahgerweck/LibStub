@@ -6,7 +6,7 @@ local LibStub = _G[LIBSTUB_MAJOR]
 -- Check to see is this version of the library is obsolete
 if not LibStub or LibStub.minor < LIBSTUB_MINOR then 
 	if not LibStub then 
-		LibStub = { libs = {},}
+		LibStub = {libs = {},}
 		setmetatable(LibStub, {})
 		_G[LIBSTUB_MAJOR] = LibStub
 	 end
@@ -18,12 +18,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns nil if a newer or same version of the lib is already present
 	-- returns empty library object or old library object if upgrade is needed
 	function LibStub:NewLibrary(major, minor)
-		if type(minor) == "string" then
-			minor = tonumber(minor:match("%d+"))
-		end
-		if type(minor) ~= "number" then
-			error("Minor version must contain a number.", 2)
-		end
+        minor = tonumber(minor) or assert(tonumber(minor:match("%d+")), "Minor version must either be a number or contain a number.")
 	
 		local entry = self.libs[major] or {}
 	
@@ -42,18 +37,11 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- throws an error if the library can not be found
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
-		if type(major) ~= "string" then
-			error(("Bad argument #2 to 'GetLibrary' (string expected, got %s)"):format(type(major)), 2)
-		end
+        assert(type(major) == "string", ("Bad argument #2 to 'GetLibrary' (string expected, got %s)"):format(type(major)))
 	
-		local entry = self.libs[major]
+		local entry = silent and self.libs[major] or assert(self.libs[major], ("Cannot find a library instance of %s."):format(major))
 	
-		if not entry then
-			if silent then return nil end
-			error(("Cannot find a library instance of %s."):format(major), 2)
-		end
-	
-		return entry.instance
+        return entry and entry.instance or nil
 	end
 
 	local function safecall(func,...)
@@ -70,16 +58,10 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- callback (function)  - A function to be called when a new library is loaded.
 	--   If this function returns a true value, then after being called, it will be removed from the callback registry.
 	function LibStub:FinalizeLibrary(major, callback)
-		if type(major) ~= "string" then
-			error(("Bad argument #2 to 'FinalizeLibrary' (string expected, got %s)"):format(type(major)), 2)
-		end
-		if callback and type(callback) ~= "function" then
-			error(("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)), 2)
-		end
+		assert(type(major) == "string", ("Bad argument #2 to 'GetLibrary' (string expected, got %s)"):format(type(major)))
+        assert(not callback or type(callback) == "function", ("Bad argument #3 to 'FinalizeLibrary' (function or nil expected, got %s)"):format(type(callback)))
 	
-		local entry = self.libs[major]
-	
-		if not entry then error(("Cannot finalize an unregistered instance of  %s."):format(major), 2) end
+		local entry = assert(self.libs[major], ("Cannot finalize an unregistered instance of  %s."):format(major))
 	
 		entry.callback = callback
 	
