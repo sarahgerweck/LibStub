@@ -16,7 +16,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns nil if a newer or same version of the lib is already present
 	-- returns empty library object or old library object if upgrade is needed
 	function LibStub:NewLibrary(major, minor)
-		assert(type(major) == "string", "Bad argument #2 to `NewLibrary' (string expected)")
+		assert(type(major) == "string", "Bad argument #2 to 'NewLibrary' (string expected)")
 		minor = assert(tonumber(strmatch(minor, "%d+")), "Minor version must either be a number or contain a number.")
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
@@ -31,8 +31,8 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- throws an error if the library can not be found (except silent is set)
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
-		if not silent and not self.libs[major] then 
-			error(("Cannot find a library instance of %q."):format(tostring(major)), 2) 
+		if not silent and not self.libs[major] then
+			error(("Cannot find a library instance of %q."):format(tostring(major)), 2)
 		end
 		
 		return self.libs[major]
