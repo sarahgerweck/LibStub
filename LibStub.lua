@@ -3,12 +3,10 @@
 local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 1
 local LibStub = _G[LIBSTUB_MAJOR]
 
--- Check to see is this version of the library is obsolete
+-- Check to see is this version of the stub is obsolete
 if not LibStub or LibStub.minor < LIBSTUB_MINOR then 
-	if not LibStub then 
-		LibStub = {libs = {}, minors = {} } 
-		_G[LIBSTUB_MAJOR] = LibStub
-	end
+	LibStub = LibStub or {libs = {}, minors = {} } 
+	_G[LIBSTUB_MAJOR] = LibStub
 	LibStub.minor = LIBSTUB_MINOR
 	
 	-- LibStub:NewLibrary(major, minor)
@@ -19,8 +17,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns empty library object or old library object if upgrade is needed
 	function LibStub:NewLibrary(major, minor)
 		assert(type(major) == "string", "Bad argument #2 to 'NewLibrary' (string expected)")
-		assert(minor, "Minor version must either be a number or contain a number.")
-		minor = tonumber(minor) or assert(tonumber(minor:match("%d+")), "Minor version must either be a number or contain a number.")
+		minor = assert(tonumber(strmatch(minor, "%d+")), "Minor version must either be a number or contain a number.")
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
 		self.minors[major], self.libs[major] = minor, self.libs[major] or {}
@@ -34,8 +31,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- throws an error if the library can not be found
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
-		assert(type(major) == "string", "Bad argument #2 to 'GetLibrary' (string expected)")
-		if not silent and not self.libs[major] then error(("Cannot find a library instance of '%s'."):format(major), 2) end
+		if not silent and not self.libs[major or "nil"] then error(("Cannot find a library instance of '%s'."):format(tostring(major)), 2) end
 		return self.libs[major]
 	end
 	
