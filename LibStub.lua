@@ -1,5 +1,6 @@
 -- $Id$
--- LicenseText
+-- LibStub is hereby placed in the Public Domain
+-- Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel, joshborke
 local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 1
 local LibStub = _G[LIBSTUB_MAJOR]
 
@@ -35,7 +36,6 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		if not silent and not self.libs[major] then
 			error(("Cannot find a library instance of %q."):format(tostring(major)), 2)
 		end
-		
 		return self.libs[major], self.minors[major]
 	end
 	
