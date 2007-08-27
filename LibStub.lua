@@ -21,7 +21,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
 		self.minors[major], self.libs[major] = minor, self.libs[major] or {}
-		return self.libs[major]
+		return self.libs[major], self.minors[major]
 	end
 	
 	-- LibStub:GetLibrary(major, [silent])
@@ -35,7 +35,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 			error(("Cannot find a library instance of %q."):format(tostring(major)), 2)
 		end
 		
-		return self.libs[major]
+		return self.libs[major], self.minors[major]
 	end
 	
 	-- LibStub:IterateLibraries()
