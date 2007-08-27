@@ -26,3 +26,15 @@ assert(newOldMinor == 1)
 
 assert(lib.MyMethod == MyMethod) -- verify that values were saved
 assert(lib.MyTable == MyTable) -- verify that values were saved
+
+local newLib, newOldMinor = LibStub:NewLibrary("Pants", "Blah 3 Blah")
+assert(newLib)
+assert(newOldMinor == 2)
+
+local newLib, newOldMinor = LibStub:NewLibrary("Pants", "Blah 4 Blah")
+assert(newLib)
+assert(newOldMinor == 3)
+
+local newLib, newOldMinor = LibStub:NewLibrary("Pants", 5)
+assert(newLib)
+assert(newOldMinor == 4)
