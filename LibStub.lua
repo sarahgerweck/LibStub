@@ -20,8 +20,9 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 		minor = assert(tonumber(strmatch(minor, "%d+")), "Minor version must either be a number or contain a number.")
 		
 		if self.minors[major] and self.minors[major] >= minor then return nil end
+        local oldminor = self.minors[major[
 		self.minors[major], self.libs[major] = minor, self.libs[major] or {}
-		return self.libs[major], self.minors[major]
+		return self.libs[major], oldminor
 	end
 	
 	-- LibStub:GetLibrary(major, [silent])
