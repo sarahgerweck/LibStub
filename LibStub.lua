@@ -33,7 +33,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- throws an error if the library can not be found (except silent is set)
 	-- returns the library object if found
 	function LibStub:GetLibrary(major, silent)
-		if not silent and not self.libs[major] then
+		if not self.libs[major] and not silent then
 			error(("Cannot find a library instance of %q."):format(tostring(major)), 2)
 		end
 		return self.libs[major], self.minors[major]
