@@ -1,7 +1,8 @@
 -- $Id$
+-- LibStub is a simple versioning stub meant for use in Libraries.  http://www.wowace.com/wiki/LibStub for more info
 -- LibStub is hereby placed in the Public Domain
 -- Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel, joshborke
-local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 1
+local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", assert(tonumber(strmatch("$Revision$", "%d+")), "LIBSTUB_MINOR did not resolve directly.")
 local LibStub = _G[LIBSTUB_MAJOR]
 
 -- Check to see is this version of the stub is obsolete
